@@ -1,0 +1,72 @@
+  @import url('https://fonts.googleapis.com/css2?family=Butcherman&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Creepster&display=swap');
+
+.container {
+    width: 100%;
+    height: 100%;
+}
+
+
+.images {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Align items to the bottom */
+    align-items: flex-end;     /* Align items to the right */
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.map{
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    display: block;
+}
+
+#button_container {
+  background: none;
+  margin: 0rem 5.5rem 2rem 0rem;
+}
+
+#next_button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+#next_button img {
+    max-width: 15rem;
+    max-height: 15rem;
+    display: block;
+}
+
+#word_lines{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+#box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    width: 10px;
+    padding: 20px;
+    border: 2px solid black;
+    background-color: lightgray;
+}
+
+html, body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
