@@ -1,8 +1,8 @@
-// Default hangman Image
-let wordLines = document.querySelector("#word_lines").innerHTML
 let next_button = document.querySelector("#next_button img").src = "assets/next_button_1.png"
 let puzzleMain = "url(\'assets/puzzle.png\')"
-let mountainImage = "url(\'assets/map_2.gif\')"
+let currentLevel = 1
+let lastRandom = -1; 
+let readyForNextMap = false;
 
 function nextButton() {
     const backgroundDiv = document.getElementById("background_image");
@@ -10,39 +10,86 @@ function nextButton() {
 
     if(currentBackground.includes("intro_1.png")) {
         backgroundDiv.style.backgroundImage = "url('assets/intro_2.png')";
-    }
-    else if(currentBackground.includes("assets/intro_2.png")) {
-        backgroundDiv.style.backgroundImage = "url('assets/map_1.gif')";
-    }
-    else if(currentBackground.includes("assets/map_1.gif")) {
-        backgroundDiv.style.backgroundImage = mountainImage;
-    }
-    else{
+    } else if(currentBackground.includes("assets/intro_2.png")) {
+        backgroundDiv.style.backgroundImage = "url('assets/start.gif')";
+    } else if(currentBackground.includes("assets/start.gif")) {
+        backgroundDiv.style.backgroundImage = "url(\'assets/map_1.gif\')";
+        currentLevel = 1
+    } else if(currentBackground.includes("assets/map_1.gif")) {
         backgroundDiv.style.backgroundImage = puzzleMain;
         startHangmanGame();
+    } else if(currentBackground.includes("assets/map_2.gif")) {
+        backgroundDiv.style.backgroundImage = puzzleMain;
+        startHangmanGame();
+        console.log("Level" + currentLevel)
+    } else if(currentBackground.includes("assets/map_3.gif")) {
+        backgroundDiv.style.backgroundImage = puzzleMain;
+        startHangmanGame();
+        console.log("Level" + currentLevel)
+    } else if(currentBackground.includes("assets/map_4.gif")) {
+        backgroundDiv.style.backgroundImage = puzzleMain;
+        startHangmanGame();
+        console.log("Level" + currentLevel)
+    } else if(currentBackground.includes("assets/map_5.gif")) {
+        backgroundDiv.style.backgroundImage = puzzleMain;
+        startHangmanGame();
+        console.log("Level" + currentLevel)
+    } else if(currentBackground.includes("assets/map_6.gif")) {
+        backgroundDiv.style.backgroundImage = puzzleMain;
+        startHangmanGame();
+        console.log("Level" + currentLevel)
+    }else if(currentLevel === 6) {
+        backgroundDiv.style.backgroundImage = `url('assets/end.gif')`;
     }
-    return false
 }
 
 function startHangmanGame() {
     const backgroundDiv = document.getElementById("background_image");
-    const currentBackground = backgroundDiv.style.backgroundImage;
+    let wordLines = document.getElementById("word_lines");
+    let hintElement = document.getElementById("hint");
+    let box = document.getElementById("box");
+    
+    // Show game elements
+    document.getElementById("game_container").style.display = "flex";
+    wordLines.style.display = "flex";
+    hintElement.style.display = "block";
+    box.style.display = "flex";
 
     // Lives
     let lives = 3
-    wordLines = document.getElementById("word_lines").style.display = "flex"
 
     // Hangman words
-    let hangmanWords = ["godzilla", "toothless", "batman", "fireplace", "avatar", "spiderman", "avengers"]
-    let random = Math.floor(Math.random() * hangmanWords.length)
+    let hangmanWords = ["doubloons", "museum", "expedition", "treasure", "geography", "adventure", "explorer", "archaeology", "discovery", "cartography", "navigation", "exploration", "voyage", "compass", "island", ];
+    let random;
+    do {
+        random = Math.floor(Math.random() * hangmanWords.length);
+    } while (random === lastRandom && hangmanWords.length > 1);
+
+    lastRandom = random;
 
     // Hints
-    let hints = ["monster", "dragon", "dark knight", "keeps you warm", "master of all elements", "friendly neighborhood superhero", "earth's mightiest heroes"]
+   const hints = [
+        "Gold coins often found in pirate treasure chests.",             // doubloons
+        "A place where ancient artifacts and discoveries are displayed.", // museum
+        "A journey with a specific purpose, often for exploration.",      // expedition
+        "Hidden riches waiting to be found.",                             // treasure
+        "The study of the Earth’s features and places.",                  // geography
+        "An exciting and risky journey.",                                 // adventure
+        "A person who travels to unknown places.",                        // explorer
+        "The study of ancient ruins and relics.",                         // archaeology
+        "Finding something new and important.",                           // discovery
+        "The art of making maps.",                                        // cartography
+        "Finding your way across land or sea.",                           // navigation
+        "Traveling to learn more about a place.",                         // exploration
+        "A long journey, especially by sea.",                             // voyage
+        "A tool that helps you find direction.",                          // compass
+        "Land surrounded by water."                                       // island
+    ];
+
 
     // Getting a random word & Hint
     let wordToGuess = hangmanWords[random]
 
-    let hintElement = document.getElementById("hint")
     hintElement.innerText = `Hint: ${hints[random]}`
 
     // Alphabet
@@ -52,7 +99,8 @@ function startHangmanGame() {
         letters = String.fromCharCode(i);
         html += '<button onclick="setLetter(\'' + letters + '\', this);">' + letters + '</button>';
     }
-    let box = document.getElementById('box').innerHTML = html;
+    
+    box = document.getElementById('box').innerHTML = html;
 
     // Checking the length of the hangman words
     for (i = 0; i < hangmanWords.length; i++) {
@@ -93,33 +141,53 @@ function startHangmanGame() {
             backgroundDiv.style.backgroundImage = "url('assets/puzzle_2.png')";
         } else if (lives == 0) {
             backgroundDiv.style.backgroundImage = "url('assets/puzzle_3.png')";
-            if (currentBackground === mountainImage) {
             setTimeout(() => {
-                backgroundDiv.style.backgroundImage = "url('assets/end_1.png')";
-            }, 900); // 900 milliseconds delay
-}
-        } 
-            // else if(currentBackground.includes("assets/intro_2.png")) {
-            //     backgroundDiv.style.backgroundImage = "url('assets/map_1.gif')";
-            // }
-                        
-            // backgroundDiv.style.backgroundImage = "url('assets/puzzle_1.png')";
-            // setTimeout(() => {
-            //     alert("Game Over. Try Again!")
-            //     location.reload()
-            // }, 900)
-        
+                document.getElementById("game_container").style.display = "none";
+                backgroundDiv.style.backgroundImage = `url('assets/end_${currentLevel}.png')`;
+                document.querySelector("#next_button img").src = "assets/tryagain.png";
+                document.querySelector("#next_button").onclick = function() {
+                    location.reload();
+                }
+            }, 1000);
+        }
         
         if(lives > 0 && guessLetter.join("") == wordToGuess){
-            setTimeout(() => {
-                alert("Congrats, You Won!")
-                location.reload()
-            }, 900)
+            if( currentLevel === 6) {
+                backgroundDiv.style.backgroundImage = `url('assets/end.gif')`;
+                document.getElementById("game_container").style.display = "none";
+                setTimeout(() => {
+                    backgroundDiv.style.backgroundImage = `url('assets/win.png')`;
+                    document.querySelector("#next_button img").src = "assets/tryagain.png";
+                    document.querySelector("#next_button").onclick = function() {
+                        location.reload();
+                    }
+                }, 1000);
+            }else{
+                setTimeout(() => {
+                    document.getElementById("game_container").style.display = "none";
+                    backgroundDiv.style.backgroundImage = `url('assets/success_${currentLevel - 1}.png')`;
+                    readyForNextMap = true;
+                    document.getElementById("next_button").onclick = function() {
+                        showNextMap();
+                    }
+                }, 1000);
+            }
+            currentLevel++;
+        }
+
+        function showNextMap() {
+            if (readyForNextMap) {
+                backgroundDiv.style.backgroundImage = `url('assets/map_${currentLevel}.gif')`;
+                document.getElementById("game_container").style.display = "none";
+                readyForNextMap = false;
+                document.getElementById("next_button").onclick = nextButton;
+            }
         }
 
         console.log(guessLetter.join(""))
         console.log(guessLetter.join("") == wordToGuess)
         
+
 
     }
 }
